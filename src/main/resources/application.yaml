@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active:
+      - ${SPRING_PROFILE:local}
+
+graphql:
+  federation:
+    enabled: true
+    tracing:
+      enabled: true
+      debug: true
+  packages:
+    - "pl.square"
+server:
+  port: 8080
