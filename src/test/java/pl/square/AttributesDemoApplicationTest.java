@@ -1,8 +1,6 @@
 package pl.square;
 
-import org.hamcrest.CoreMatchers;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -31,7 +29,7 @@ class AttributesDemoApplicationTest {
                 "} }";
     public static final String VALUES_QUERY = "{ attributeValues { " +
             "  attribute { name }, value, sortOrder,localizedValues { " +
-            "   language { code }, value " +
+            "   language { code }, label " +
             "  } } " +
             "}";
 
@@ -46,9 +44,7 @@ class AttributesDemoApplicationTest {
                  .accept(MediaType.APPLICATION_JSON)
                  .exchange()
                  .expectStatus().isOk()
-                 .expectBody(String.class).consumeWith(
-                         body -> body.toString().contains("LocalizedLabel"));
-
+                 .expectBody(String.class).value(containsString("LocalizedString"));
     }
 
 
@@ -60,10 +56,7 @@ class AttributesDemoApplicationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class).consumeWith(body -> {
-                    Assertions.assertTrue(body.getResponseBody().contains("pl"));
-                        });
-
+                .expectBody(String.class).value(containsString("pl"));
     }
 
     @Test
@@ -74,7 +67,7 @@ class AttributesDemoApplicationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class).value(CoreMatchers.containsString("Tagliecasco"));
+                .expectBody(String.class).value(containsString("Tagliecasco"));
 
     }
 
@@ -109,9 +102,7 @@ class AttributesDemoApplicationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class).consumeWith(body -> {
-                    Assertions.assertTrue(body.getResponseBody().contains("pt_BR"));
-                });
+                .expectBody(String.class).value(containsString("pt_BR"));
     }
 
     @Test
@@ -134,9 +125,7 @@ class AttributesDemoApplicationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class).consumeWith(body -> {
-                    Assertions.assertTrue(body.getResponseBody().contains("Breite"));
-                });
+                .expectBody(String.class).value(containsString("Breite"));
     }
 
     @Test
@@ -145,7 +134,7 @@ class AttributesDemoApplicationTest {
         //add
         String query = "mutation addAttributeValue { " +
                 "  addAttributeValue( value: \"green\", attributeCode: \"color\"," +
-                "    localizedValues: [{language: {code: \"pl_PL\"}, value: \"zielony\"}]," +
+                "    localizedValues: [{language: {code: \"pl_PL\"}, label: \"zielony\"}]," +
                 "    sortOrder: 30" +
                 " )}";
         webTestClient.get()
@@ -161,9 +150,7 @@ class AttributesDemoApplicationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class).consumeWith(body -> {
-                    Assertions.assertTrue(body.getResponseBody().contains("zielony"));
-                });
+                .expectBody(String.class).value(containsString("zielony"));
     }
 
     // --------------------------------------
