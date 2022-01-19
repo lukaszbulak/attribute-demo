@@ -85,7 +85,7 @@ class AttributesDemoApplicationTest {
     }
 
     @Test
-    public void allowsAddingNewLaguages() {
+    public void allowsAddingNewLanguages() {
 
         //add
         String query = "mutation addLanguage { addLanguage(code:\"pt_BR\")}";

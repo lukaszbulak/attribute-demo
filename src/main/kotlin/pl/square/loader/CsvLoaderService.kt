@@ -12,6 +12,7 @@ import pl.square.model.AttributeValue
 import pl.square.model.Lang
 import pl.square.model.LocalizedString
 import java.io.InputStreamReader
+import kotlin.streams.toList
 
 
 @Service
@@ -116,13 +117,8 @@ class CsvLoaderService(val store: DataHolder) {
      *    As this is a HashSet, in case of doubled language between files, only one will be stored
      */
     private fun parseLanguages(header: CSVRecord, lastOffset: Int): List<Lang> {
-        val languagesList = ArrayList<Lang>()
-        for (i in 1 until header.size() - lastOffset) {
-            val label = header.get(i)
-            // label-pl_PL
-            languagesList.add(Lang(label.substring("label-".length)))
-        }
-        return languagesList
+        return header.stream().limit((header.size() - lastOffset).toLong()).skip(1)
+            .map { l -> Lang(l.substring("label-".length)) }.toList()
     }
 
 
