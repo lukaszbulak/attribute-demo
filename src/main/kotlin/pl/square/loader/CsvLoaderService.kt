@@ -7,7 +7,10 @@ import org.apache.commons.csv.CSVRecord
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import pl.square.data.DataHolder
-import pl.square.model.*
+import pl.square.model.Attribute
+import pl.square.model.AttributeValue
+import pl.square.model.Lang
+import pl.square.model.LocalizedString
 import java.io.InputStreamReader
 
 
@@ -22,7 +25,7 @@ class CsvLoaderService(val store: DataHolder) {
         try {
             loadAttributes()
             loadValues()
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
             logger.error ("Error loading CSV data")
         }
     }
@@ -60,6 +63,7 @@ class CsvLoaderService(val store: DataHolder) {
 
     private fun loadValues() {
         val stream = javaClass.classLoader.getResourceAsStream("options.csv")
+            ?: throw IllegalStateException("cannot find resource: options.csv")
         val reader = InputStreamReader(stream, "UTF-8")
         val parser = CSVParser(reader, CSV_FORMAT)
         val iter = parser.iterator()
@@ -108,7 +112,7 @@ class CsvLoaderService(val store: DataHolder) {
      * lastOffset: for options skip last 2 fields in row.
      *             for attributes read up to last cell
      *
-     *    Save data in `store.languages`
+     *    Later save data in `store.languages`
      *    As this is a HashSet, in case of doubled language between files, only one will be stored
      */
     private fun parseLanguages(header: CSVRecord, lastOffset: Int): List<Lang> {

@@ -1,16 +1,13 @@
 package pl.square.loader
 
 import mu.KotlinLogging
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVParser
-import org.apache.commons.csv.CSVRecord
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import pl.square.data.DataHolder
-import pl.square.model.*
-import java.io.InputStreamReader
-import java.util.*
-import kotlin.collections.ArrayList
+import pl.square.model.Attribute
+import pl.square.model.AttributeValue
+import pl.square.model.Lang
+import pl.square.model.LocalizedString
 
 
 @Service
@@ -20,13 +17,9 @@ class MockDataService(val store: DataHolder) {
     private val logger = KotlinLogging.logger {}
 
     init {
-        try {
-            loadAttributes()
-            loadValues()
-            logger.info ("Mock data loaded")
-        } catch (e: Throwable) {
-            logger.error ("Error loading CSV data")
-        }
+        loadAttributes()
+        loadValues()
+        logger.info("Mock data loaded")
     }
 
     private fun loadAttributes() {
@@ -59,7 +52,7 @@ class MockDataService(val store: DataHolder) {
     }
 
 
-    fun loadValues() {
+    private fun loadValues() {
 
         val values = listOf(
             AttributeValue(
